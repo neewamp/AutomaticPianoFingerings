@@ -1,0 +1,201 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<link href="coqdoc.css" rel="stylesheet" type="text/css" />
+<title>WeekOne</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library WeekOne</h1>
+
+<div class="code">
+<span class="id" title="keyword">Require</span> <span class="id" title="keyword">Import</span> <span class="id" title="var">Frap</span> <span class="id" title="var">Datatypes</span> <span class="id" title="var">Orders</span>.<br/>
+<span class="id" title="keyword">Export</span> <span class="id" title="var">Datatypes</span> <span class="id" title="var">Orders</span>.<br/>
+<span class="id" title="keyword">Include</span> <span class="id" title="var">OrderedType</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+A Tree is just an inductive datatype with:
+   Leaf holding no data, kind of like Nil in a List.
+   Node, paramaterized over an ordered type, containing two subtrees
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">tree</span> :=<br/>
+| <span class="id" title="var">Leaf</span>: <span class="id" title="var">tree</span><br/>
+| <span class="id" title="var">Node</span>: <span class="id" title="var">t</span> -&gt; <span class="id" title="var">tree</span> -&gt; <span class="id" title="var">tree</span> -&gt; <span class="id" title="var">tree</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Definition</span> <span class="id" title="var">Singleton</span> (<span class="id" title="var">v</span>: <span class="id" title="var">t</span>) := <span class="id" title="var">Node</span> <span class="id" title="var">v</span> <span class="id" title="var">Leaf</span> <span class="id" title="var">Leaf</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+The second exercise set consists of proofs about tree operations 
+   that preserve a Binary Search Tree invariant 
+
+<div class="paragraph"> </div>
+
+ A BST is a tree such that for each node, Node t1 lt rt, t1 is strictly less than l1 and strictly greater than rt 
+
+<div class="paragraph"> </div>
+
+
+<div class="paragraph"> </div>
+
+   tree_lt is used to say that each element in a tree, tr, is strictly less than some (element : t), t
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">tree_lt</span> (<span class="id" title="var">n</span>: <span class="id" title="var">t</span>) (<span class="id" title="var">tr</span>: <span class="id" title="var">tree</span>) :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">tr</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">Leaf</span> =&gt; <span class="id" title="var">True</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">Node</span> <span class="id" title="var">v</span> <span class="id" title="var">ltr</span> <span class="id" title="var">rtr</span> =&gt; <span class="id" title="var">lt</span> <span class="id" title="var">v</span> <span class="id" title="var">n</span> /\ <span class="id" title="var">tree_lt</span> <span class="id" title="var">n</span> <span class="id" title="var">ltr</span> /\ <span class="id" title="var">tree_lt</span> <span class="id" title="var">n</span> <span class="id" title="var">rtr</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+I like to make inductive definitions and show that they are equivalent.  When reasoning about programs that use the Fixpoint version it is sometimes easier to substitute the inductive definition.  For performing inversion on the relation gives two subgoals for leaf and node, including information that was used to construct them.
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">tree_ltP</span> : <span class="id" title="var">t</span> -&gt; <span class="id" title="var">tree</span> -&gt; <span class="id" title="keyword">Prop</span> :=<br/>
+| <span class="id" title="var">leaf_intr</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span>, <span class="id" title="var">tree_ltP</span> <span class="id" title="var">n</span> <span class="id" title="var">Leaf</span><br/>
+| <span class="id" title="var">node_intr</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">v</span> <span class="id" title="var">ltr</span> <span class="id" title="var">rtr</span>, <span class="id" title="var">lt</span> <span class="id" title="var">v</span> <span class="id" title="var">n</span> -&gt; <span class="id" title="var">tree_ltP</span> <span class="id" title="var">n</span> <span class="id" title="var">ltr</span> -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">tree_ltP</span> <span class="id" title="var">n</span> <span class="id" title="var">rtr</span> -&gt; <span class="id" title="var">tree_ltP</span> <span class="id" title="var">n</span> (<span class="id" title="var">Node</span> <span class="id" title="var">v</span> <span class="id" title="var">ltr</span> <span class="id" title="var">rtr</span>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Proof of their equivalence 
+</div>
+<div class="code">
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">tree_lt_iff</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">tr</span>, <span class="id" title="var">tree_ltP</span> <span class="id" title="var">n</span> <span class="id" title="var">tr</span> &lt;-&gt; <span class="id" title="var">tree_lt</span> <span class="id" title="var">n</span> <span class="id" title="var">tr</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">split</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">generalize</span> <span class="id" title="tactic">dependent</span> <span class="id" title="var">n</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">induct</span> <span class="id" title="var">tr</span>; <span class="id" title="var">simplify</span>; <span class="id" title="tactic">auto</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">invert</span> <span class="id" title="var">H</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intuition</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">induct</span> <span class="id" title="var">tr</span>; <span class="id" title="var">simplify</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">constructor</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intuition</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">constructor</span>; <span class="id" title="tactic">auto</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Similar relation for greater than and it's inductive counterpart 
+</div>
+<div class="code">
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">tree_gt</span> (<span class="id" title="var">n</span>: <span class="id" title="var">t</span>) (<span class="id" title="var">tr</span>: <span class="id" title="var">tree</span>) :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">tr</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">Leaf</span> =&gt; <span class="id" title="var">True</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">Node</span> <span class="id" title="var">v</span> <span class="id" title="var">ltr</span> <span class="id" title="var">rtr</span> =&gt; <span class="id" title="var">lt</span> <span class="id" title="var">n</span> <span class="id" title="var">v</span> /\ <span class="id" title="var">tree_gt</span> <span class="id" title="var">n</span> <span class="id" title="var">ltr</span> /\ <span class="id" title="var">tree_gt</span> <span class="id" title="var">n</span> <span class="id" title="var">rtr</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">tree_gtP</span> : <span class="id" title="var">t</span> -&gt; <span class="id" title="var">tree</span> -&gt; <span class="id" title="keyword">Prop</span> :=<br/>
+| <span class="id" title="var">leaf_int</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span>, <span class="id" title="var">tree_gtP</span> <span class="id" title="var">n</span> <span class="id" title="var">Leaf</span><br/>
+| <span class="id" title="var">node_int</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">v</span> <span class="id" title="var">ltr</span> <span class="id" title="var">rtr</span>, <span class="id" title="var">lt</span> <span class="id" title="var">n</span> <span class="id" title="var">v</span> -&gt; <span class="id" title="var">tree_gtP</span> <span class="id" title="var">n</span> <span class="id" title="var">ltr</span> -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">tree_gtP</span> <span class="id" title="var">n</span> <span class="id" title="var">rtr</span> -&gt; <span class="id" title="var">tree_gtP</span> <span class="id" title="var">n</span> (<span class="id" title="var">Node</span> <span class="id" title="var">v</span> <span class="id" title="var">ltr</span> <span class="id" title="var">rtr</span>).<br/>
+</div>
+
+<div class="doc">
+ Adding hints allows auto and various tactics use apply the constructors of an inductive data type
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Hint Constructors</span> <span class="id" title="var">tree_ltP</span>.<br/>
+<span class="id" title="keyword">Hint Constructors</span> <span class="id" title="var">tree_gtP</span>.<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">tree_gt_iff</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">n</span> <span class="id" title="var">tr</span>, <span class="id" title="var">tree_gtP</span> <span class="id" title="var">n</span> <span class="id" title="var">tr</span> &lt;-&gt; <span class="id" title="var">tree_gt</span> <span class="id" title="var">n</span> <span class="id" title="var">tr</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">split</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">generalize</span> <span class="id" title="tactic">dependent</span> <span class="id" title="var">n</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">induct</span> <span class="id" title="var">tr</span>; <span class="id" title="var">simplify</span>; <span class="id" title="tactic">auto</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">invert</span> <span class="id" title="var">H</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intuition</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">induct</span> <span class="id" title="var">tr</span>; <span class="id" title="var">simplify</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">constructor</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intuition</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Adding rewrite hints to the database of hints helps automate proofs
+
+</div>
+<div class="code">
+<span class="id" title="keyword">Hint Rewrite</span> <span class="id" title="var">tree_lt_iff</span>.<br/>
+<span class="id" title="keyword">Hint Rewrite</span> <span class="id" title="var">tree_gt_iff</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+The binary search tree definition 
+</div>
+<div class="code">
+<span class="id" title="keyword">Fixpoint</span> <span class="id" title="var">BST</span> (<span class="id" title="var">tr</span>: <span class="id" title="var">tree</span>) :=<br/>
+&nbsp;&nbsp;<span class="id" title="keyword">match</span> <span class="id" title="var">tr</span> <span class="id" title="keyword">with</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">Leaf</span> =&gt; <span class="id" title="var">True</span><br/>
+&nbsp;&nbsp;| <span class="id" title="var">Node</span> <span class="id" title="var">v</span> <span class="id" title="var">lt</span> <span class="id" title="var">rt</span> =&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">BST</span> <span class="id" title="var">lt</span> /\ <span class="id" title="var">tree_lt</span> <span class="id" title="var">v</span> <span class="id" title="var">lt</span> /\<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">BST</span> <span class="id" title="var">rt</span> /\ <span class="id" title="var">tree_gt</span> <span class="id" title="var">v</span> <span class="id" title="var">rt</span><br/>
+&nbsp;&nbsp;<span class="id" title="keyword">end</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Inductive</span> <span class="id" title="var">BSTP</span> : <span class="id" title="var">tree</span> -&gt; <span class="id" title="keyword">Prop</span> :=<br/>
+| <span class="id" title="var">leaf_intro</span> :  <span class="id" title="var">BSTP</span> <span class="id" title="var">Leaf</span><br/>
+| <span class="id" title="var">node_intro</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">v</span> <span class="id" title="var">lt</span> <span class="id" title="var">rt</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">BSTP</span> <span class="id" title="var">lt</span> -&gt; <span class="id" title="var">tree_ltP</span> <span class="id" title="var">v</span> <span class="id" title="var">lt</span> -&gt; <span class="id" title="var">BSTP</span> <span class="id" title="var">rt</span> -&gt; <span class="id" title="var">tree_gtP</span> <span class="id" title="var">v</span> <span class="id" title="var">rt</span> -&gt;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" title="var">BSTP</span> (<span class="id" title="var">Node</span> <span class="id" title="var">v</span> <span class="id" title="var">lt</span> <span class="id" title="var">rt</span>).<br/>
+<span class="id" title="keyword">Hint Constructors</span> <span class="id" title="var">BSTP</span>.<br/>
+
+<br/>
+<span class="id" title="keyword">Lemma</span> <span class="id" title="var">BSTP_iff</span> : <span class="id" title="keyword">forall</span> <span class="id" title="var">t</span>, <span class="id" title="var">BST</span> <span class="id" title="var">t</span> &lt;-&gt; <span class="id" title="var">BSTP</span> <span class="id" title="var">t</span>.<br/>
+<span class="id" title="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">split</span>. <span class="id" title="var">induct</span> <span class="id" title="var">t0</span>; <span class="id" title="var">simplify</span>; <span class="id" title="tactic">auto</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intuition</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">constructor</span>; <span class="id" title="var">simplify</span>; <span class="id" title="tactic">auto</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="tactic">intros</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">induct</span> <span class="id" title="var">t0</span>; <span class="id" title="var">simplify</span>; <span class="id" title="tactic">auto</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">invert</span> <span class="id" title="var">H</span>.<br/>
+&nbsp;&nbsp;<span class="id" title="var">propositional</span>;<br/>
+&nbsp;&nbsp;<span class="id" title="var">simplify</span>; <span class="id" title="tactic">auto</span>.<br/>
+<span class="id" title="keyword">Qed</span>.<br/>
+<span class="id" title="keyword">Hint Rewrite</span> <span class="id" title="var">BSTP_iff</span>.<br/>
+
+<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>
