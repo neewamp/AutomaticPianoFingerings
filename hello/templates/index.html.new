@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block content %}
+
+<div class="jumbotron text-center">
+  <div class="container">
+    <a href="/" class="lang-logo">
+      <img src="https://i.imgur.com/Wdy7zYL.gif">
+      <!-- <img src="{% static 'ProofGeneral-splash.png'%}"> -->
+    </a>
+    <p>Automated Piano Fingerings!</p>
+  </div>
+</div>
+<div class="container">
+  {% if documents %}
+  <p>File to be annotated:</p>
+  <ul>
+    {% for document in documents %}
+    <li><a href="{{ document.docfile.url }}">{{ document.docfile.name }}</a></li>
+    {% endfor %}
+  </ul>
+
+  {% endif %}
+  <!-- Upload form. Note enctype attribute! -->
+  <form action="{% url "index" %}" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <p>{{ form.non_field_errors }}</p>
+
+    <p>{{ form.docfile.label_tag }} {{ form.docfile.help_text }}</p>
+
+    <p>
+      {{ form.docfile.errors }}
+      {{ form.docfile }}
+    </p>
+    <p><input type="submit" value="Upload"/></p>
+  </form>
+
+
+  <div class="alert alert-info" role="alert">
+    <p>Annotated files </p>
+    <ul>
+      {% for file in Files %}
+      <li> <a href=/media/annotations/{{ file }}>{{ file }}</a> </li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <div class="container">
+    <h2>Simple steps</h2>
+    <ul>
+      <li>First pick a piano score in <a href="http://www.musicxml.com/">musicXML</a> format, </li>
+      
+      <li>Next upload that file using the choose file exlporer and the upload button</li>
+      <li>Finally wait for your score to be annotated.  Annotation could take up to a minute</li>
+  </div>
+
+
+
+  <!-- <div class="alert alert-info text-center" role="alert"> -->
+  <!--   Some information about eventually us I guess...  -->
+  <!-- </div> -->
+  <!-- <\!-- <img src="{% static 'juno.jpg'%}" class="img-responsive"> -\-> -->
+  <!-- <hr> -->
+  <!-- <div class="row"> -->
+  <!--   <div class="col-md-6"> -->
+  <!--     <h3><span class="glyphicon glyphicon-info-sign"></span> Some Stuff</h3> -->
+  <!--     <ul> -->
+  <!--       <li>Juno is the best of us</li> -->
+  <!--     </ul> -->
+  <!--   </div> -->
+  <!--   <div class="col-md-6"> -->
+  <!--     <h3><span class="glyphicon glyphicon-link"></span> Juno</h3> -->
+  <!--     <h3><span class="glyphicon glyphicon-link"></span> Helpful Links</h3> -->
+  <!--   </div> -->
+  <!-- </div> <\!-- row -\-> -->
+  <!--  <div class="alert alert-info text-center" role="alert"> -->
+  <!-- </div> -->
+</div>
+{% endblock %}
