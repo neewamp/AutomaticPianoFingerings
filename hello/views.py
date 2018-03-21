@@ -8,8 +8,8 @@ from django.views.generic import TemplateView
 #    template_name = "WeakOne.html"
 
 def index(request):
-    return HttpResponse('Hello from Python!')
-    # return render(request, 'index.html')
+    # return HttpResponse('Hello from Python!')
+    return render(request, 'index.html')
 
 def weekone(request):
     return render(request, 'weekone/index.html')

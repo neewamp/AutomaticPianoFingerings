@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block content %}
+
+<div class="jumbotron text-center">
+  <div class="container">
+    <a href="/" class="lang-logo">
+      <img src="{% static 'ProofGeneral-splash.png'%}">
+    </a>
+    <h1>Notes for <a href="https://github.com/mit-frap/spring17">exercises</a> from <a href="http://adam.chlipala.net/frap/">frap</a></h1>
+    <p>Logan Leland, Nathan St. Amour and Sam Merten are going through the book Formal Reasoning About Programs by <a href="http://adam.chlipala.net/">Adam Chlipala</a> these are our notes!</p>
+    <a type="button" class="btn btn-lg btn-default" href="https://github.com/neewamp"><span class="glyphicon glyphicon-flash"></span> Nathan's Github</a>
+    <a type="button" class="btn btn-lg btn-default" href="https://github.com/merten-samuel/"><span class="glyphicon glyphicon-flash"></span> Sam's Github</a>
+    <a type="button" class="btn btn-lg btn-default" href="https://github.com/loganleland"><span class="glyphicon glyphicon-flash"></span> Logans's Github</a>
+  </div>
+</div>
+<div class="container">
+  <div class="alert alert-info text-center" role="alert">
+    Some information about eventually us I guess... 
+  </div>
+  <img src="{% static 'juno.jpg'%}" class="img-responsive">
+  <hr>
+  <div class="row">
+    <div class="col-md-6">
+      <h3><span class="glyphicon glyphicon-info-sign"></span> Some Stuff</h3>
+      <ul>
+        <li>Juno is the best of us</li>
+      </ul>
+    </div>
+    <div class="col-md-6">
+      <h3><span class="glyphicon glyphicon-link"></span> Juno</h3>
+      <h3><span class="glyphicon glyphicon-link"></span> Helpful Links</h3>
+    </div>
+  </div> <!-- row -->
+  <!--  <div class="alert alert-info text-center" role="alert"> -->
+  <!-- </div> -->
+</div>
+{% endblock %}
