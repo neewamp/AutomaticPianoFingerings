@@ -16,5 +16,4 @@ urlpatterns = [
     url(r'^weekone/first/', hello.views.first, name='first'),
     url(r'^weekone/', hello.views.weekone, name='weekone'),
     url(r'^presentation/', hello.views.pres, name='pres'),
-    url(r'^upload/', hello.views.upload, name='upload'),
 ]

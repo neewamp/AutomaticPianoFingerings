@@ -20,6 +20,7 @@
       <li>Next upload that file using the choose file exlporer and the upload button</li>
       <li>Finally wait for your score to be annotated.  Annotation could take up to a minute</li>
   </div>
+
   {% if documents %}
   <p>File to be annotated:</p>
   <ul>
@@ -32,13 +33,20 @@
   <p>
     We are currently undergoing a change to our model.
   </p>
-
-<form action="/upload/" enctype="multipart/form-data" method="post", onclick="return validate()">
+  <!-- Upload form. Note enctype attribute! -->
+  <form action="{% url "upload" %}" method="post" enctype="multipart/form-data">
     {% csrf_token %}
-    <input type="file" name="xmlfile">
+    <p>{{ form.non_field_errors }}</p>
 
-    <input type="submit" value="upload xml file">
-</form>
+    <p>{{ form.docfile.label_tag }} {{ form.docfile.help_text }}</p>
+
+    <p>
+      {{ form.docfile.errors }}
+      {{ form.docfile }}
+    </p>
+    <p><input type="submit" value="Upload"/></p>
+  </form>
+
 
   <div class="alert alert-info" role="alert">
     <p>Annotated files </p>
@@ -71,9 +79,3 @@
   <!-- </div> -->
 </div>
 {% endblock %}
-<script>
-function validate()
-{
-alert("Going to post your data now!");
-}
-</script>
