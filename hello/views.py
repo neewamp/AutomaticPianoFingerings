@@ -30,6 +30,9 @@ def upload(request):
 
     return render(request, 'index.html')
 
+def manual(request):
+    return render(request, 'UserManual.html')
+
 def index(request):
     # return HttpResponse('Hello from Python!')
     return render(request, 'index.html')

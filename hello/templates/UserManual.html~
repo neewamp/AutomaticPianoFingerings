@@ -1,0 +1,280 @@
+<p dir="ltr">
+    1. Introduction
+</p>
+<p dir="ltr">
+    The purpose of AFMusic(: is to educate and inspire pianists of all skill
+    levels to continue advancing in music. This project tackles the barrier of
+    choosing the best possible fingerings for each given piano score by
+    displaying the most plausible fingerings, teaching the user excellence when
+    it comes to the flow of a piano piece. Our hope is to motivate pianists and
+    enrich the musical world with easily accessible annotated sheet music.
+</p>
+<br/>
+<p dir="ltr">
+    Written by:
+</p>
+<p dir="ltr">
+    Colton Smith: will always get things done right and have fun doing it.
+</p>
+<p dir="ltr">
+    Kristen Masada: loves to explore interesting topics in the fields of music
+    and computer science
+</p>
+<p dir="ltr">
+    Mike Gundling: always on the lookout for ways to make tools like ours more
+</p>
+<p dir="ltr">
+    accessible.
+</p>
+<p dir="ltr">
+    Nathan St. Amour: always interested in finding out more.
+</p>
+<br/>
+<p dir="ltr">
+    Keywords
+</p>
+<p dir="ltr">
+    MusicXML
+</p>
+<p dir="ltr">
+    PDF
+</p>
+<p dir="ltr">
+    MuseScore
+</p>
+<p dir="ltr">
+    Tuffy
+</p>
+<p dir="ltr">
+    Machine learning
+</p>
+<p dir="ltr">
+    Markov Logic Networks (MLN’s)
+</p>
+<p dir="ltr">
+    Piano
+</p>
+<p dir="ltr">
+    Dude
+</p>
+<br/>
+<p dir="ltr">
+    2. System
+</p>
+<br/>
+<p dir="ltr">
+    2.1 Brief description
+</p>
+<br/>
+<p dir="ltr">
+    The function of AFMusic(: is simple and straightforward. A user first
+    designates and uploads a piano score in the MusicXML format. This file will
+    then be processed and an ideal fingering annotation will be generated, and
+    the user will then be able to download an annotated score in the format of
+    their choice, MusicXML or PDF. The user will also have the option to
+    download a video of the piece being played, which will allow for a much
+    more engaging learning experience.
+</p>
+<br/>
+<p dir="ltr">
+    2.2 System overview
+</p>
+<br/>
+<p dir="ltr">
+    Upon uploading the MusicXML file, the system will immediately parse it into
+    an intermediate format required for our developed model. The model then
+    produces what it defines to be the most likely fingering for this set.
+    Then, this output is used to annotate the original uploaded file. This
+    annotated file will then be used to produce a different file output (PDF)
+    or video upon user request.
+</p>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<p dir="ltr">
+    2.3 Developed Model
+</p>
+<br/>
+<p dir="ltr">
+    In order to solve the open(ish) problem of how to generate a reasonable
+    fingering for an arbitrary piano score, we took a machine learning
+    approach. For this, we looked toward Markov Logic Networks, a type of
+    probabilistic graphical modelI that utilizes first order logic. As there
+    have already been tools created to solve problems through this approach,
+    the authors currently utilize (Tuffy Alchemy or Markov The Beast). We
+    created a predicate representation of a piano score, as well as rules that
+    dictate various features of the ideal fingering. For these features, we
+    largely refer work that was done by previous authors to solve the outlined
+    problem, and based our rules heavily around the rules outlined in “A
+    variable neighborhood search algorithm to generate piano fingerings for
+    polyphonic sheet music” by Matteo Balliauw.
+</p>
+<br/>
+<p dir="ltr">
+    3. Usage
+</p>
+<p dir="ltr">
+    Typical User and Use Cases
+</p>
+<p dir="ltr">
+    A typical user of our system is someone who either plays piano or is
+    interested in learning how to play piano. They are also comfortable enough
+    with handling file formats such as MusicXML or PDF to use our website, or
+    is willing to learn how to use these based on the instructions provided in
+    this manual.
+</p>
+<p dir="ltr">
+    The following are several use cases based on different user experience
+    levels:
+</p>
+<ol>
+    <li dir="ltr">
+        <p dir="ltr">
+            (Beginner) Use sample MusicXML files provided on website and
+            download a PDF with fingerings.
+        </p>
+    </li>
+    <ol>
+        <li dir="ltr">
+            <p dir="ltr">
+                The user clicks the title of one of the sample MusicXML files
+                provided on the front page of the website. They then click
+                ‘Upload.’
+            </p>
+        </li>
+        <ol>
+            <li dir="ltr">
+                <p dir="ltr">
+                    If the user uploads an invalid MusicXML file or a file with
+                    an incorrect extension, the website will display an error
+                    message and will not convert the given file.
+                </p>
+            </li>
+        </ol>
+        <li dir="ltr">
+            <p dir="ltr">
+                When the server has finished computing the fingerings for the
+                given XML file, the user clicks the ‘Download PDF’ button on
+                the newly generated page.
+            </p>
+        </li>
+        <li dir="ltr">
+            <p dir="ltr">
+                The user can then load the PDF file either in a separate tab on
+                their web browser or into their preferred PDF reader, such as
+                Adobe Acrobat or Preview.
+            </p>
+        </li>
+    </ol>
+    <li dir="ltr">
+        <p dir="ltr">
+            (Medium) Upload external MusicXML file and download visualization.
+        </p>
+    </li>
+    <ol>
+        <li dir="ltr">
+            <p dir="ltr">
+                The user clicks the ‘Browse’ button on the front page of the
+                website under ‘Choose MusicXML File’ and picks a MusicXML file
+                from his or her desktop. They then click the ‘Upload’ button on
+                the front page of the website.
+            </p>
+        </li>
+        <ol>
+            <li dir="ltr">
+                <p dir="ltr">
+                    (See 2ai. above).
+                </p>
+            </li>
+        </ol>
+        <li dir="ltr">
+            <p dir="ltr">
+                When the server has finished computing the fingerings for the
+                given XML file, the user clicks the ‘Download MP4’ button on
+                the newly generated page.
+            </p>
+        </li>
+        <li dir="ltr">
+            <p dir="ltr">
+                The user can view the downloaded MP4 file in QuickTime Player,
+                Windows Media Player, or their preferred MP4 video player on
+                their computer.
+            </p>
+        </li>
+    </ol>
+    <li dir="ltr">
+        <p dir="ltr">
+            (Advanced) Upload external MusicXML file and download MusicXML file
+            with fingerings.
+        </p>
+    </li>
+    <ol>
+        <li dir="ltr">
+            <p dir="ltr">
+                (See step 2a. above).
+            </p>
+        </li>
+        <ol>
+            <li dir="ltr">
+                <p dir="ltr">
+                    (See 2ai. above).
+                </p>
+            </li>
+        </ol>
+        <li dir="ltr">
+            <p dir="ltr">
+                When the server has finished computing the fingerings for the
+                given XML file, the user clicks the ‘Download MusicXML’ button
+                on the newly generated page.
+            </p>
+        </li>
+        <li dir="ltr">
+            <p dir="ltr">
+                The user then opens their preferred music notation software*
+                and loads the MusicXML file in this.
+            </p>
+        </li>
+        <li dir="ltr">
+            <p dir="ltr">
+                *If the user is not familiar with music notation software, we
+                recommend using MuseScore––an open-source notation software
+                that we used in the development of our system. This can be
+downloaded from                <a href="https://musescore.org/">https://musescore.org/</a>,
+                which is available for Windows, macOS, and Linux. After
+                downloading and opening the software, the MusicXML file can be
+                loaded into MuseScore by clicking ‘File’ &gt; ‘Open’.
+            </p>
+        </li>
+    </ol>
+</ol>
+<br/>
+<p dir="ltr">
+    4. Reporting
+</p>
+<p dir="ltr">
+    If the user has questions, comments, or complaints about our website or
+this user manual, they should feel free to email us at    <a href="mailto:afmusic@gmail.com">afmusic@gmail.com</a>. These questions
+    can go beyond the usage of our website––we are also happy to answer
+    questions about our machine learning-based implementation.
+</p>
+<br/>
+<p dir="ltr">
+    5. About Us
+</p>
+<p dir="ltr">
+    We are senior Computer Science majors at Ohio University. We all share an
+    interest in machine learning, and music, resulting in AF Music. We are all
+    passionate about our project and would be open to any inquiry.
+</p>
+<br/>
+<br/>
+<p dir="ltr">
+    5. Acknowledgements
+</p>
+<p dir="ltr">
+    Department, Dr. Bunescu, Ohio University, Ami Scherson
+</p>
+<br/>
+<br/>
