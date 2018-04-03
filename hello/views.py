@@ -20,6 +20,10 @@ import os
 import subprocess
 import time
 
+def test(request):
+    s = os.getcwd()
+    return HttpResponse(s)
+
 def upload(request):
     # Handle file upload
     if request.method == 'POST':

@@ -1,0 +1,143 @@
+257415.0
+217937.0
+0
+No change in 10 iterations, ending
+0
+0
+256146.5
+221661.0
+221714.0
+No change in 10 iterations, ending
+427898.0
+0
+No change in 10 iterations, ending
+0
+0
+255732.5
+222284.0
+220913.0
+221002.0
+220811.0
+221025.0
+220913.0
+No change in 10 iterations, ending
+427898.0
+0
+No change in 10 iterations, ending
+0
+0
+255476.5
+217912.5
+216249.5
+No change in 10 iterations, ending
+427898.0
+0
+No change in 10 iterations, ending
+0
+0
+256193.5
+221462.0
+221430.0
+No change in 10 iterations, ending
+427898.0
+0
+No change in 10 iterations, ending
+0
+0
+255306.5
+219070.0
+217199.0
+No change in 10 iterations, ending
+427898.0
+0
+No change in 10 iterations, ending
+0
+0
+251932.0
+221703.0
+221610.0
+221805.0
+221642.0
+221593.0
+221469.0
+221703.0
+221633.0
+221715.0
+221700.0
+221808.0
+221700.0
+221805.0
+221726.0
+221828.0
+221661.0
+221508.0
+221805.0
+221808.0
+221805.0
+221591.0
+No change in 10 iterations, ending
+427898.0
+0
+No change in 10 iterations, ending
+0
+0
+254128.0
+220452.5
+220257.5
+220346.5
+220369.5
+No change in 10 iterations, ending
+427898.0
+0
+No change in 10 iterations, ending
+0
+0
+260082.5
+221284.0
+0
+No change in 10 iterations, ending
+0
+0
+256923.0
+218295.5
+217983.5
+No change in 10 iterations, ending
+427898.0
+0
+No change in 10 iterations, ending
+0
+0
+255103.5
+219999.5
+No change in 10 iterations, ending
+427898.0
+0
+No change in 10 iterations, ending
+0
+0
+258296.5
+222535.0
+No change in 10 iterations, ending
+427898.0
+0
+No change in 10 iterations, ending
+0
+0
+254525.5
+219824.5
+219702.5
+No change in 10 iterations, ending
+427898.0
+0
+No change in 10 iterations, ending
+0
+0
+251217.5
+220035.5
+219859.5
+No change in 10 iterations, ending
+427898.0
+0
+No change in 10 iterations, ending
+0
+0

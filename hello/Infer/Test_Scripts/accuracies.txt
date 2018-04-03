@@ -1,0 +1,73 @@
+****Anyway Test****
+Anyway Test Right:
+Anyway Test Left:
+Anyway Test Overall:
+
+****Yesterday Test****
+Yesterday Test Right:
+264
+17.424242424242426
+Yesterday Test Left:
+108
+28.703703703703702
+Yesterday Test Overall:
+372
+20.698924731182796
+
+****Summertime Sadness Test****
+Summertime Sadness Test Right:
+454
+61.45374449339207
+Summertime Sadness Test Left:
+576
+38.020833333333336
+Summertime Sadness Test Overall:
+1030
+48.349514563106794
+
+****The Greatest Test****
+The Greatest Test Right:
+414
+86.71497584541063
+The Greatest Test Left:
+795
+58.23899371069182
+The Greatest Test Overall:
+1209
+67.99007444168734
+
+****Daydreaming Test****
+Daydreaming Test Right:
+896
+84.70982142857143
+Daydreaming Test Left:
+795
+24.0251572327044
+Daydreaming Test Overall:
+
+****Lady Madonna Test****
+Lady Madonna Test Right:
+896
+4.241071428571429
+Lady Madonna Test Left:
+795
+4.150943396226415
+Lady Madonna Test Overall:
+
+****Martha My Dear Test****
+Lady Madonna Test Right:
+Lady Madonna Test Left:
+Lady Madonna Test Overall:
+
+****Moonchild Test****
+Moonchild Test Right:
+896
+4.352678571428571
+Moonchild Test Left:
+Error. Empty file given
+Moonchild Test Overall:
+896
+4.352678571428571
+
+****Strange Magic Test****
+Strange Magic Test Right:

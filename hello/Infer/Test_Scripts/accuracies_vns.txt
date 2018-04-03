@@ -1,0 +1,122 @@
+****Anyway Test****
+Anyway Test Right:
+511
+51.076320939334636
+Anyway Test Left:
+189
+55.55555555555556
+Anyway Test Overall:
+700
+52.285714285714285
+
+****Yesterday Test****
+Yesterday Test Right:
+212
+38.20754716981132
+Yesterday Test Left:
+273
+42.124542124542124
+Yesterday Test Overall:
+485
+40.41237113402062
+
+****Summertime Sadness Test****
+Summertime Sadness Test Right:
+454
+26.651982378854626
+Summertime Sadness Test Left:
+576
+36.63194444444444
+Summertime Sadness Test Overall:
+1030
+32.23300970873787
+
+****The Greatest Test****
+The Greatest Test Right:
+414
+44.44444444444444
+The Greatest Test Left:
+795
+49.43396226415094
+The Greatest Test Overall:
+1209
+47.72539288668321
+
+****Daydreaming Test****
+Daydreaming Test Right:
+896
+54.129464285714285
+Daydreaming Test Left:
+909
+53.68536853685369
+Daydreaming Test Overall:
+1805
+53.905817174515235
+
+****Lady Madonna Test****
+Lady Madonna Test Right:
+205
+83.41463414634147
+Lady Madonna Test Left:
+145
+82.75862068965517
+Lady Madonna Test Overall:
+350
+83.14285714285714
+
+****Martha My Dear Test****
+Lady Madonna Test Right:
+814
+75.42997542997543
+Lady Madonna Test Left:
+306
+53.92156862745098
+Lady Madonna Test Overall:
+1120
+69.55357142857143
+
+****Moonchild Test****
+Moonchild Test Right:
+350
+17.714285714285715
+Moonchild Test Left:
+Error. Empty file given
+Moonchild Test Overall:
+350
+17.714285714285715
+
+****Strange Magic Test****
+Strange Magic Test Right:
+393
+50.63613231552163
+Strange Magic Test Left:
+241
+40.66390041493776
+Strange Magic Test Overall:
+634
+46.845425867507885
+
+****Paint it Black Test****
+Paint it Black Test Right:
+1018
+60.51080550098232
+Paint it Black Test Left:
+1003
+59.42173479561316
+Paint it Black Test Overall:
+2021
+59.970311726867884
+
+****Westworld Test****
+Westworld Test Right:
+264
+56.06060606060606
+Westworld Test Left:
+108
+46.2962962962963
+Westworld Test Overall:
+372
+53.225806451612904
+
+# Overall average accuracy per note:
+# 53.68%
