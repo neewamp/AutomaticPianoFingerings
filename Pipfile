@@ -10,6 +10,7 @@ gunicorn = "*"
 psycopg2 = "*"
 whitenoise = "*"
 requests = "*"
+music21 = "*"
 
 [requires]
 python_version = "3.6"

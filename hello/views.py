@@ -15,7 +15,7 @@ from django.core.urlresolvers import reverse
 from hello.models import Document
 # from hello.forms import DocumentForm
 
-import hello.Parse as Parse
+# import hello.Parse as Parse
 from django.conf import settings
 import os
 import subprocess
