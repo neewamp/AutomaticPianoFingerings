@@ -1,4 +1,7 @@
 from django.conf.urls import include, url
+from django.views.generic.base import RedirectView
+from django.conf.urls.static import static
+from django.conf import settings
 
 from django.contrib import admin
 admin.autodiscover()
@@ -19,4 +22,5 @@ urlpatterns = [
     url(r'^upload/', hello.views.upload, name='upload'),
     url(r'^manual/', hello.views.manual, name='manual'),
     url(r'^test/', hello.views.test, name='test'),
-]
+] + static('annotated/', document_root='annotated/')
+

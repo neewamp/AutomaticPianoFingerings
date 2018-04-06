@@ -29,9 +29,9 @@
   </ul>
 
   {% endif %}
-  <p>
-    We are currently undergoing a change to our model.
-  </p>
+  <!-- <p> -->
+  <!--   We are currently undergoing a change to our model. -->
+  <!-- </p> -->
 
 <form action="/upload/" enctype="multipart/form-data" method="post", onclick="return validate()">
     {% csrf_token %}
@@ -44,7 +44,7 @@
     <p>Annotated files </p>
     <ul>
       {% for file in Files %}
-      <li> <a href=/media/annotations/{{ file }}>{{ file }}</a> </li>
+      <li> <a href=/annotated/{{ file }}>{{ file }}</a> </li>
       {% endfor %}
     </ul>
   </div>
