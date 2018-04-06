@@ -59,11 +59,6 @@ def manual(request):
 
 def index(request):
     # return HttpResponse('Hello from Python!')
-    import stat
-    st = os.stat('Converter.py')
-    os.chmod('Converter.py', st.st_mode | stat.S_IEXEC())
-    st = os.stat('hello/Parse.py')
-    os.chmod('hello/Parse.py', st.st_mode | stat.S_IEXEC())
     if not os.path.exists('annotated'):
         os.mkdir('annotated')
     return render(request, 'index.html')
