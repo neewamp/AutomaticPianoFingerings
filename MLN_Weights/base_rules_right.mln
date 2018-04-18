@@ -1,0 +1,78 @@
+*Concurrent(index,index)
+*Black(pitch)
+Finger(finger!,index)
+*MaxPrac(finger,finger,length)
+*White(pitch)
+*MaxRel(finger,finger,length)
+*Staff(staff,index)
+*Note(pitch,index)
+*MinComf(finger,finger,length)
+*MaxComf(finger,finger,length)
+*Succ(index,index)
+*MinPrac(finger,finger,length)
+*First(index)
+*MinRel(finger,finger,length)
+
+// Rule 1
+2       !Succ(v0, v1)  v !MinComf(v2, v3, v4)  v !Finger(v2, v0)  v !Finger(v3, v1)  v !Note(v5, v0)  v !Note(v6, v1)  v  [(v6 - v5) > v4] //3.1
+1       !Succ(v0, v1)  v !MaxComf(v2, v3, v4)  v !Finger(v2, v0)  v !Finger(v3, v1)  v !Note(v5, v0)  v !Note(v6, v1)  v [(v6 - v5) < v4] //6.1
+
+// Rule 2
+1       !Succ(v0, v1)  v !MinRel(v2, v3, v4)  v !Finger(v2, v0)  v !Finger(v3, v1)  v !Note(v5, v0)  v !Note(v6, v1)  v [(v6 - v5) > v4] //11.1
+1       !Succ(v0, v1)  v !MaxRel(v2, v3, v4)  v !Finger(v2, v0)  v !Finger(v3, v1)  v !Note(v5, v0)  v !Note(v6, v1)  v [(v6 - v5) < v4] //13.1
+
+// Rule 3
+1       !Succ(v0, v1)  v !Succ(v1, v2)  v !Finger(v3, v0)  v !Finger(v4, v2)  v !Note(v5, v0)  v !Note(v5, v2)  v [v3 = v4]
+
+// Rule 4
+1       !Succ(v0, v1)  v !Succ(v1, v2)  v !MinComf(v4, v3, v5)  v !Finger(v3, v0)  v !Finger(v3, v2)  v !Note(v6, v0)  v !Note(v7, v2)  v [(v7 - v6) > v5]
+1       !Succ(v0, v1)  v !Succ(v1, v2)  v !MaxComf(v4, v3, v5)  v !Finger(v3, v0)  v !Finger(v3, v2)  v !Note(v6, v0)  v !Note(v7, v2)  v [(v7 - v6) < v5]
+
+
+// Rule 5
+1      Finger("4", v0)
+
+// Rule 6
+1       !Succ(v0, v1)  v !Finger("3", v0)  v !Finger(v4, v1)  v !Note(v2, v0)  v !Note(v3, v1) v v4 <> 4 //14.1
+1       !Succ(v0, v1)  v !Finger("4", v0)  v !Finger(v4, v1)  v !Note(v2, v0)  v !Note(v3, v1) v v4 <> 3 //17.1
+
+// Rule 7, Less likely for a 4 and 3 to go from black to white, or 3 and 4 to go from white to black
+1       !Succ(v0, v1)  v !Finger("3", v0)  v !Finger("4", v1)  v !Note(v2, v0)  v !Note(v3, v1)  v !White(v2)  v  Black(v3)  //14.1
+1       !Succ(v0, v1)  v !Finger("4", v0)  v !Finger("3", v1)  v !Note(v2, v0)  v !Note(v3, v1)  v !Black(v2)  v  White(v3)  //17.1
+
+// Rule 8,
+// Thumb no like black keys
+0.5       !Finger("1", v0)  v !Note(v1, v0)  v  White(v1)  //18.1
+// More difficult to play a thumb on a black key before, or after, playing a white key with a different finger
+1       !Succ(v0, v1) v !Finger("1", v0) v !Note(v2, v0) v !Note(v3, v1) v !Black(v2) v !Finger(v4, v1) v Black(v3) v v4 = 1
+1       !Succ(v1, v0) v !Finger("1", v0) v !Note(v2, v0) v !Note(v3, v1) v !Black(v2) v !Finger(v4, v1) v Black(v3) v v4 = 1
+
+// Rule 9
+1       !Succ(v0, v1) v !Finger("5", v0) v !Note(v2, v0) v !Note(v3, v1) v !Black(v2) v !Finger(v4, v1) v Black(v3) v v4 = 5
+1       !Succ(v1, v0) v !Finger("5", v0) v !Note(v2, v0) v !Note(v3, v1) v !Black(v2) v !Finger(v4, v1) v Black(v3) v v4 = 5
+
+// Rule 12
+1       !Succ(v0, v1)  v !Succ(v1, v2)  v !Finger(v3, v0)  v !Finger(v4, v2)  v !Note(v5, v0)  v !Note(v6, v1)  v !Note(v7, v2)  v [((v5 < v6) OR (v6 < v7)) OR (v3 <> v4)] //22.0
+1       !Succ(v0, v1)  v !Succ(v1, v2)  v !Finger(v3, v0)  v !Finger(v4, v2)  v !Note(v5, v0)  v !Note(v6, v1)  v !Note(v7, v2)  v [((v5 > v6) OR (v6 > v7)) OR (v3 <> v4)] //25.0
+
+// Rule 13
+10       !Succ(v0, v1)  v !MinPrac(v2, v3, v4)  v !Finger(v2, v0)  v !Finger(v3, v1)  v !Note(v5, v0)  v !Note(v6, v1)  v [(v6 - v5) > v4]
+10       !Succ(v0, v1)  v !MaxPrac(v2, v3, v4)  v !Finger(v2, v0)  v !Finger(v3, v1)  v !Note(v5, v0)  v !Note(v6, v1)  v [(v6 - v5) < v4]
+
+
+// Rule 14, part 1, concurrent notes must be more than mincomf or less than maxcomf
+1       !Concurrent(v0, v1)  v !MinComf(v2, v3, v4)  v !Finger(v2, v0)  v !Finger(v3, v1)  v !Note(v5, v0)  v !Note(v6, v1)  v [(v6 - v5) > v4]
+1       !Concurrent(v0, v1)  v !MaxComf(v2, v3, v4)  v !Finger(v2, v0)  v !Finger(v3, v1)  v !Note(v5, v0)  v !Note(v6, v1)  v [(v6 - v5) < v4]
+
+
+// Rule 14, part 2, rel
+1       !Concurrent(v0, v1)  v !MinRel(v2, v3, v4)  v !Finger(v2, v0)  v !Finger(v3, v1)  v !Note(v5, v0)  v !Note(v6, v1)  v [(v6 - v5) > v4] //5.1
+1       !Concurrent(v0, v1)  v !MaxRel(v2, v3, v4)  v !Finger(v2, v0)  v !Finger(v3, v1)  v !Note(v5, v0)  v !Note(v6, v1)  v [(v6 - v5) < v4] //5.1
+
+// Rule 14, part 3, prac
+10       !Concurrent(v0, v1)  v !MinPrac(v2, v3, v4)  v !Finger(v2, v0)  v !Finger(v3, v1)  v !Note(v5, v0)  v !Note(v6, v1)  v [(v6 - v5) > v4] //21.1
+10       !Concurrent(v0, v1)  v !MaxPrac(v2, v3, v4)  v !Finger(v2, v0)  v !Finger(v3, v1)  v !Note(v5, v0)  v !Note(v6, v1)  v [(v6 - v5) < v4] //21.1
+
+
+
+

@@ -7,7 +7,7 @@ from django.views.generic import TemplateView
 from django.shortcuts import render
 from django.template import RequestContext
 from django.http import HttpResponseRedirect, HttpResponse
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 
 # from myproject.myapp.models import Document
 # from myproject.myapp.forms import DocumentForm
@@ -41,6 +41,16 @@ def annotate(path,name):
         os.mkdir('annotated')
     subprocess.check_output(['python3', 'Converter.py', 'upload/' + name + '.xml', 'annotated/' + name + '_annotated.xml'])
 
+def topdf(name):
+    # makepdf = ['musescore', 'annotated/' + name + '_annotated.xml', '-p', 'fixfingering.qml', '-o', 'annotated/' + name + '_annotated.pdf']
+    tolily = ['musicxml2ly', 'annotated/' + name + '_annotated.xml', '-o', 'annotated/' + name + '_annotated.ly']
+    subprocess.check_output(tolily)
+    makepdf = ['lilypond', 'annotated/' + name + '_annotated.ly']
+    subprocess.check_output(makepdf)
+    #hack
+    subprocess.check_output(['mv', name + '_annotated.pdf', 'annotated/' + name + '_annotated.pdf'])
+    
+
 def upload(request):
     # Handle file upload
     if request.method == 'POST':
@@ -50,7 +60,9 @@ def upload(request):
         handle_uploaded_file(xmlfile,str(xmlfile))
         annotate('upload/' + str(xmlfile)[:-4]+'.txt', str(xmlfile)[:-4])
         annotated = 'annotated/' + str(xmlfile)[:-4] + '_annotated.xml'
-        return render(request, 'index.html', {'Files' : [str(xmlfile)[:-4] + '_annotated.xml']})
+        name = str(xmlfile)[:-4]
+        topdf(name)
+        return render(request, 'index.html', {'Files' : [str(xmlfile)[:-4] + '_annotated.xml', name + '_annotated.pdf']})
 
     return render(request, 'index.html')
 
