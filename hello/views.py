@@ -21,6 +21,7 @@ import os
 import subprocess
 import time
 
+
 def test(request):
     s = os.getcwd() + "/hello"
     return HttpResponse(s)
@@ -42,7 +43,13 @@ def annotate(path,name):
     subprocess.check_output(['python3', 'Converter.py', 'upload/' + name + '.xml', 'annotated/' + name + '_annotated.xml'])
 
 def topdf(name):
-    # makepdf = ['musescore', 'annotated/' + name + '_annotated.xml', '-p', 'fixfingering.qml', '-o', 'annotated/' + name + '_annotated.pdf']
+    # conv =  music21.converter.subConverters.ConverterLilypond()
+    # scorename = 'yesterday'
+    # filepath = 'annotated/' + name + '_annotated'
+    # music21object = music21.converter.parse('annotated/' + name + '_annotated.xml')
+    # print('hello')
+    # conv.write(music21object, fmt = 'lilypond', fp=filepath, subformats = ['pdf'])    
+
     tolily = ['musicxml2ly', 'annotated/' + name + '_annotated.xml', '-o', 'annotated/' + name + '_annotated.ly']
     subprocess.check_output(tolily)
     makepdf = ['lilypond', 'annotated/' + name + '_annotated.ly']
