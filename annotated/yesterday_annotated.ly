@@ -98,7 +98,7 @@ PartPOneVoiceTwo =  \relative g' {
     <c e f a>1 \bar "|."
     }
 
-PartPcZeroNineeadSevendcTwoebcOnedThreecTwoSixSixNineeNineZeroaTwoEightOneffFourFourVoiceNone = 
+PartPEightddaTwoFouraeTwoSixNineFourEightSevenTwoFourSixNineTwoFivefeThreefEightcFoureaNinecNineVoiceNone = 
 \relative f, {
     \clef "bass" \key f \major \numericTimeSignature\time 4/4 f1 -4 -1 | % 2
     f1 -1 | % 3
@@ -165,7 +165,7 @@ PartPcZeroNineeadSevendcTwoebcOnedThreecTwoSixSixNineeNineZeroaTwoEightOneffFour
             \set Staff.instrumentName = "Piano"
             \set Staff.shortInstrumentName = "Pno."
             \context Staff << 
-                \context Voice = "PartPcZeroNineeadSevendcTwoebcOnedThreecTwoSixSixNineeNineZeroaTwoEightOneffFourFourVoiceNone" { \PartPcZeroNineeadSevendcTwoebcOnedThreecTwoSixSixNineeNineZeroaTwoEightOneffFourFourVoiceNone }
+                \context Voice = "PartPEightddaTwoFouraeTwoSixNineFourEightSevenTwoFourSixNineTwoFivefeThreefEightcFoureaNinecNineVoiceNone" { \PartPEightddaTwoFouraeTwoSixNineFourEightSevenTwoFourSixNineTwoFivefeThreefEightcFoureaNinecNineVoiceNone }
                 >>
             >>
         

@@ -69,9 +69,9 @@ def upload(request):
         annotated = 'annotated/' + str(xmlfile)[:-4] + '_annotated.xml'
         name = str(xmlfile)[:-4]
         topdf(name)
-        return render(request, 'index.html', {'Files' : [str(xmlfile)[:-4] + '_annotated.xml', name + '_annotated.pdf']})
+        return render(request, 'index.html', {'Out' : True,'Files' : [str(xmlfile)[:-4] + '_annotated.xml', name + '_annotated.pdf']})
 
-    return render(request, 'index.html')
+    return render(request, 'index.html', {'Out' : False})
 
 def manual(request):
     return render(request, 'UserManual.html')
