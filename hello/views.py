@@ -68,7 +68,7 @@ def upload(request):
         annotate('upload/' + str(xmlfile)[:-4]+'.txt', str(xmlfile)[:-4])
         annotated = 'annotated/' + str(xmlfile)[:-4] + '_annotated.xml'
         name = str(xmlfile)[:-4]
-        topdf(name)
+        # topdf(name)
         return render(request, 'index.html', {'Out' : True,'Files' : [str(xmlfile)[:-4] + '_annotated.xml', name + '_annotated.pdf']})
 
     return render(request, 'index.html', {'Out' : False})
