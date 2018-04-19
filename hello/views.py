@@ -36,8 +36,11 @@ def handle_uploaded_file(file, filename):
         for chunk in file.chunks():
             destination.write(chunk)
     
+    if not os.path.exists('annotated'):
+        os.mkdir('annotated')
+
     annotated = 'annotated/' + filename[:-4] + '_annotated.xml'
-    Annotate('/upload/' + filename, annotated)
+    Annotate('upload/' + filename, annotated)
 
     # annotated = 'annotated/' + str(xmlfile)[:-4] + '_annotated.xml'
     # Annotate('/upload/' + str(xmlfile), annotated)
