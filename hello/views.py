@@ -15,6 +15,8 @@ from django.urls import reverse
 from hello.models import Document
 # from hello.forms import DocumentForm
 
+from Utils.annotate import Annotate
+
 # import hello.Parse as Parse
 from django.conf import settings
 import os
@@ -33,8 +35,16 @@ def handle_uploaded_file(file, filename):
     with open('upload/' + filename, 'wb+') as destination:
         for chunk in file.chunks():
             destination.write(chunk)
-    parse = 'hello/Parse.py'
-    subprocess.check_output(['python3',parse,'upload/' + filename, 'upload/' + filename[:-4] + '.txt'])
+    
+    annotated = 'annotated/' + filename[:-4] + '_annotated.xml'
+    Annotate('/upload/' + filename, annotated)
+
+    # annotated = 'annotated/' + str(xmlfile)[:-4] + '_annotated.xml'
+    # Annotate('/upload/' + str(xmlfile), annotated)
+
+
+    # parse = 'hello/Parse.py'
+    # subprocess.check_output(['python3',parse,'upload/' + filename, 'upload/' + filename[:-4] + '.txt'])
 
 
 def annotate(path,name):
@@ -58,15 +68,16 @@ def topdf(name):
     subprocess.check_output(['mv', name + '_annotated.pdf', 'annotated/' + name + '_annotated.pdf'])
     
 
+from music21 import converter, clef, note, articulations
+
 def upload(request):
     # Handle file upload
     if request.method == 'POST':
         xmlfile = request.FILES['xmlfile']
         # response = HttpResponse(xmlfile.read(), content_type="application/xhtml+xml")
         # response['Content-Disposition'] = 'attachment;filename=' + request.FILES['xmlfile'].name
+        # annotate('upload/' + str(xmlfile)[:-4]+'.txt', str(xmlfile)[:-4])
         handle_uploaded_file(xmlfile,str(xmlfile))
-        annotate('upload/' + str(xmlfile)[:-4]+'.txt', str(xmlfile)[:-4])
-        annotated = 'annotated/' + str(xmlfile)[:-4] + '_annotated.xml'
         name = str(xmlfile)[:-4]
         # topdf(name)
         return render(request, 'index.html', {'Out' : True,'Files' : [str(xmlfile)[:-4] + '_annotated.xml', name + '_annotated.pdf']})

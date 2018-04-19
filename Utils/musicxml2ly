@@ -1,4 +1,4 @@
-#!/usr/bin/python2 -tt
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
 import optparse
 import sys
@@ -8,7 +8,7 @@ import string
 import codecs
 import zipfile
 import tempfile
-import StringIO
+import io
 
 """
 
@@ -21,25 +21,25 @@ might modify installed .pyc files.
 
 """
 
-for d in ['/usr/share/lilypond/2.18.2',
-	  '/usr/lib/lilypond/2.18.2']:
-    sys.path.insert (0, os.path.join (d, 'python'))
+# for d in ['/usr/share/lilypond/2.18.2',
+# 	  '/usr/lib/lilypond/2.18.2']:
+#     sys.path.insert (0, os.path.join (d, 'python'))
 
 # dynamic relocation, for GUB binaries.
-bindir = os.path.abspath (os.path.dirname (sys.argv[0]))
-for p in ['share', 'lib']:
-    datadir = os.path.abspath (bindir + '/../%s/lilypond/current/python/' % p)
-    sys.path.insert (0, datadir)
+# bindir = os.path.abspath (os.path.dirname (sys.argv[0]))
+# for p in ['share', 'lib']:
+#     datadir = os.path.abspath (bindir + '/../%s/lilypond/current/python/' % p)
+#     sys.path.insert (0, datadir)
 """
 """
 
-import lilylib as ly
-_ = ly._
+import ly
+
 
 import musicxml
 import musicexp
 
-from rational import Rational
+# from rational import Rational
 
 # Store command-line options in a global variable, so we can access them everywhere
 options = None
@@ -2102,7 +2102,7 @@ def musicxml_voice_to_lily_voice (voice):
         staff = n.get_maybe_exist_named_child ('staff')
         if staff:
             staff = staff.get_text ()
-            if current_staff and staff <> current_staff and not n.get_maybe_exist_named_child ('chord'):
+            if current_staff and staff != current_staff and not n.get_maybe_exist_named_child ('chord'):
                 voice_builder.add_command (musicexp.StaffChange (staff))
             current_staff = staff
 
@@ -2121,7 +2121,7 @@ def musicxml_voice_to_lily_voice (voice):
                 voice_builder.jumpto (n._when)
                 figured_bass_builder.jumpto (n._when)
                 chordnames_builder.jumpto (n._when)
-            except NegativeSkip, neg:
+            except (NegativeSkip, neg):
                 voice_builder.correct_negative_skip (n._when)
                 figured_bass_builder.correct_negative_skip (n._when)
                 chordnames_builder.correct_negative_skip (n._when)
@@ -2269,7 +2269,7 @@ def musicxml_voice_to_lily_voice (voice):
         if pending_figured_bass:
             try:
                 figured_bass_builder.jumpto (n._when)
-            except NegativeSkip, neg:
+            except ((NegativeSkip, neg)):
                 pass
             for fb in pending_figured_bass:
                 # if a duration is given, use that, otherwise the one of the note
@@ -2284,7 +2284,7 @@ def musicxml_voice_to_lily_voice (voice):
         if pending_chordnames:
             try:
                 chordnames_builder.jumpto (n._when)
-            except NegativeSkip, neg:
+            except (NegativeSkip, neg):
                 pass
             for cn in pending_chordnames:
                 # Assign the duration of the EventChord
@@ -2850,7 +2850,7 @@ def read_musicxml (filename, compressed, use_lxml):
         container_xml = z.read ("META-INF/container.xml")
         if not container_xml:
             return None
-        container = read_xml (StringIO.StringIO (container_xml), use_lxml)
+        container = read_xml (io.io (container_xml), use_lxml)
         if not container:
             return None
         rootfiles = container.get_maybe_exist_named_child ('rootfiles')
@@ -2864,7 +2864,7 @@ def read_musicxml (filename, compressed, use_lxml):
             raw_string = z.read (mxml_file)
 
     if raw_string:
-        io_object = StringIO.StringIO (raw_string)
+        io_object = io.io (raw_string)
     elif filename == "-":
         io_object = sys.stdin
     else:

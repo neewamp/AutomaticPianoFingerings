@@ -1,17 +1,22 @@
 import sys
 import random
-import argparse
 
 def parseArgs():
   parser = argparse.ArgumentParser('MLN Cost Estimator')
-  parser.add_argument('--db_file', type=str, default ='upload/testr.db', help= 'DB file location')
-  parser.add_argument('--mln_file', type=str, default ='hello/Infer/MLN_Weights/base_rules_right.mln', help= 'MLN Rules file location')
-  parser.add_argument('--dm_file', type=str, default ='hello/Infer/Constants/fingering_vns.db', help= 'Distance matrix file location')
-  parser.add_argument('--key_file', type=str, default = 'hello/Infer/Constants/keys.db', help= 'Key type file location')
-  parser.add_argument('--out', type=str, default = 'upload/bleh.ann')
+  parser.add_argument('--db_file', type=str, default ='../DB_Files/testr.db', help= 'DB file location')
+  parser.add_argument('--mln_file', type=str, default ='../MLN_Weights/base_rules_right.mln', help= 'MLN Rules file location')
+  parser.add_argument('--dm_file', type=str, default ='../Constants/fingering_vns.db', help= 'Distance matrix file location')
+  parser.add_argument('--key_file', type=str, default = '../Constants/keys.db', help= 'Key type file location')
+  parser.add_argument('--epochs', type=int, default = 250, help= 'Number of max iterations')
   FLAGS = None
   FLAGS, unparsed = parser.parse_known_args()
   return FLAGS
+
+
+mln_file = 'MLN_Weights/base_rules_right.mln'
+dm_file = 'Constants/fingering_vns.db'
+key_file = 'Constants/keys.db'
+
 
 def isNumber(s):
   try:
@@ -27,35 +32,35 @@ def readDB(db_file):
   concurrents = {}
   rev_concurrents ={}
   preds = {}
-  with open(db_file) as db_input:
-    facts = db_input.readlines()
-    for fact in facts:
-      split1 = fact.split('(')
-      split2 = split1[1].split(')')
-      split3 = split2[0].split(',')
-      if(split1[0] == "Finger"):
-        fingers[int(split3[1])] = int(split3[0])
-      elif(split1[0] == "Concurrent"):
-        if split3[0] in concurrents:
-          concurrents[int(split3[0])].append(int(split3[1]))
-          rev_concurrents[int(split3[1])].append(int(split3[0]))
+  facts = db_file.readlines()
+  for fact in facts:
+    split1 = fact.split('(')
+    split2 = split1[1].split(')')
+    split3 = split2[0].split(',')
+    if(split1[0] == "Finger"):
+      fingers[int(split3[1])] = int(split3[0])
+    elif(split1[0] == "Concurrent"):
+      if split3[0] in concurrents:
+        concurrents[int(split3[0])].append(int(split3[1]))
+        rev_concurrents[int(split3[1])].append(int(split3[0]))
+      else:
+        concurrents[int(split3[0])] = [int(split3[1])]
+        rev_concurrents[int(split3[1])] = [int(split3[0])]
+    elif(split1[0] == "Note"):
+      notes[int(split3[1])] = int(split3[0])
+    elif(split1[0] == "Succ"):
+      if int(split3[0]) in succs:
+        succs[int(split3[0])].append(int(split3[1]))
+        preds[int(split3[1])] = [int(split3[0])]
+      else:
+        succs[int(split3[0])] = [int(split3[1])]
+        if int(split3[1]) in preds:
+          preds[int(split3[1])].append(int(split3[0]))
         else:
-          concurrents[int(split3[0])] = [int(split3[1])]
-          rev_concurrents[int(split3[1])] = [int(split3[0])]
-      elif(split1[0] == "Note"):
-          notes[int(split3[1])] = int(split3[0])
-          fingers[int(split3[1])] = 1
-      elif(split1[0] == "Succ"):
-        if int(split3[0]) in succs:
-          succs[int(split3[0])].append(int(split3[1]))
           preds[int(split3[1])] = [int(split3[0])]
-        else:
-          succs[int(split3[0])] = [int(split3[1])]
-          if int(split3[1]) in preds:
-            preds[int(split3[1])].append(int(split3[0]))
-          else:
-            preds[int(split3[1])] = [int(split3[0])]
-
+  for i in notes:
+    if not i in fingers:
+      fingers[i] = 1
 
   pred_list = [notes, succs, preds, concurrents, rev_concurrents]
   return pred_list, fingers
@@ -150,15 +155,15 @@ def evaluateRules(facts,queries,weights, distance_matrix, keys):
       f1,f2 = fingers[index], fingers[index2]
       distance = notes[index2]-notes[index]
 # Rule 1
-      if distance < mincomf[(f1,f2)]:
-        cost += weights[0]*(mincomf[(f1,f2)] - distance)
-      if distance > maxcomf[(f1,f2)]:
-        cost += weights[1]*(distance - maxcomf[(f1,f2)])
+      if distance < mincomf[(f2,f1)]:
+        cost += weights[0]*(mincomf[(f2,f1)] - distance)
+      if distance > maxcomf[(f2,f1)]:
+        cost += weights[1]*(distance - maxcomf[(f2,f1)])
 # Rule 2
-      if distance < minrel[(f1,f2)]:
-        cost += weights[2]*(minrel[(f1,f2)] - distance)
-      if distance > maxrel[(f1,f2)]:
-        cost += weights[3]*(distance - maxrel[(f1,f2)])
+      if distance < minrel[(f2,f1)]:
+        cost += weights[2]*(minrel[(f2,f1)] - distance)
+      if distance > maxrel[(f2,f1)]:
+        cost += weights[3]*(distance - maxrel[(f2,f1)])
 
 # Rule 5
       if f1 == 4:
@@ -193,10 +198,10 @@ def evaluateRules(facts,queries,weights, distance_matrix, keys):
 
 
 # Rule 13
-      if distance < minprac[(f1,f2)]:
-        cost += weights[19]*(minprac[(f1,f2)] - distance)
-      if distance > maxprac[(f1,f2)]:
-       cost += weights[20]*(distance - maxprac[(f1,f2)])
+      if distance < minprac[(f2,f1)]:
+        cost += weights[19]*(minprac[(f2,f1)] - distance)
+      if distance > maxprac[(f2,f1)]:
+       cost += weights[20]*(distance - maxprac[(f2,f1)])
 
 # Three note pairs
       if index2 in succs:
@@ -222,19 +227,19 @@ def evaluateRules(facts,queries,weights, distance_matrix, keys):
       distance = notes[index2] - notes[index]
       f1, f2 = fingers[index], fingers[index2]
 # Rule 1
-      if distance < mincomf[(f1,f2)]:
-        cost += weights[21]*(mincomf[(f1,f2)] - distance)
-      if distance > maxcomf[(f1,f2)]:
-        cost += weights[22]*(distance - maxcomf[(f1,f2)])
+      if distance < mincomf[(f2,f1)]:
+        cost += weights[21]*(mincomf[(f2,f1)] - distance)
+      if distance > maxcomf[(f2,f1)]:
+        cost += weights[22]*(distance - maxcomf[(f2,f1)])
 # Rule 2
-      if distance < minrel[(f1,f2)]:
-        cost += weights[23]*(minrel[(f1,f2)] - distance)
-      if distance > maxrel[(f1,f2)]:
-        cost += weights[24]*(distance - maxrel[(f1,f2)])
-      if distance < minprac[(f1,f2)]:
-        cost += weights[25]*(minprac[(f1,f2)] - distance)
-      if distance > maxprac[(f1,f2)]:
-        cost += weights[26]*(distance - maxprac[(f1,f2)])
+      if distance < minrel[(f2,f1)]:
+        cost += weights[23]*(minrel[(f2,f1)] - distance)
+      if distance > maxrel[(f2,f1)]:
+        cost += weights[24]*(distance - maxrel[(f2,f1)])
+      if distance < minprac[(f2,f1)]:
+        cost += weights[25]*(minprac[(f2,f1)] - distance)
+      if distance > maxprac[(f2,f1)]:
+        cost += weights[26]*(distance - maxprac[(f2,f1)])
 
 # Rule 4
           
@@ -264,15 +269,15 @@ def singleCost(facts, queries,weights, distance_matrix, keys, index):
     
       distance = notes[index2]-notes[index]
 # Rule 1
-      if distance < mincomf[(f1,f2)]:
-        cost += weights[0]*(mincomf[(f1,f2)] - distance)
-      if distance > maxcomf[(f1,f2)]:
-        cost += weights[1]*(distance - maxcomf[(f1,f2)])
+      if distance < mincomf[(f2,f1)]:
+        cost += weights[0]*(mincomf[(f2,f1)] - distance)
+      if distance > maxcomf[(f2,f1)]:
+        cost += weights[1]*(distance - maxcomf[(f2,f1)])
 # Rule 2
-      if distance < minrel[(f1,f2)]:
-        cost += weights[2]*(minrel[(f1,f2)] - distance)
-      if distance > maxrel[(f1,f2)]:
-        cost += weights[3]*(distance - maxrel[(f1,f2)])
+      if distance < minrel[(f2,f1)]:
+        cost += weights[2]*(minrel[(f2,f1)] - distance)
+      if distance > maxrel[(f2,f1)]:
+        cost += weights[3]*(distance - maxrel[(f2,f1)])
 
 # Rule 5
       if f1 == 4:
@@ -305,10 +310,10 @@ def singleCost(facts, queries,weights, distance_matrix, keys, index):
         cost += weights[16]
 
 # Rule 13
-      if distance < minprac[(f1,f2)]:
-        cost += weights[19]*(minprac[(f1,f2)] - distance)
-      if distance > maxprac[(f1,f2)]:
-        cost += weights[20]*(distance - maxprac[(f1,f2)])
+      if distance < minprac[(f2,f1)]:
+        cost += weights[19]*(minprac[(f2,f1)] - distance)
+      if distance > maxprac[(f2,f1)]:
+        cost += weights[20]*(distance - maxprac[(f2,f1)])
 
 # Three notes forward
       if index2 in succs:
@@ -336,15 +341,15 @@ def singleCost(facts, queries,weights, distance_matrix, keys, index):
     
       distance = notes[index]-notes[index2]
 # Rule 1
-      if distance < mincomf[(f1,f2)]:
-        cost += weights[0]*(mincomf[(f1,f2)] - distance)
-      if distance > maxcomf[(f1,f2)]:
-        cost += weights[1]*(distance - maxcomf[(f1,f2)])
+      if distance < mincomf[(f2,f1)]:
+        cost += weights[0]*(mincomf[(f2,f1)] - distance)
+      if distance > maxcomf[(f2,f1)]:
+        cost += weights[1]*(distance - maxcomf[(f2,f1)])
 # Rule 2
-      if distance < minrel[(f1,f2)]:
-        cost += weights[2]*(minrel[(f1,f2)] - distance)
-      if distance > maxrel[(f1,f2)]:
-        cost += weights[3]*(distance - maxrel[(f1,f2)])
+      if distance < minrel[(f2,f1)]:
+        cost += weights[2]*(minrel[(f2,f1)] - distance)
+      if distance > maxrel[(f2,f1)]:
+        cost += weights[3]*(distance - maxrel[(f2,f1)])
 
 # Rule 6
       if f1 == 3 & f2 == 4:
@@ -371,10 +376,10 @@ def singleCost(facts, queries,weights, distance_matrix, keys, index):
         cost += weights[16]
 
 # Rule 13
-      if distance < minprac[(f1,f2)]:
-        cost += weights[19]*(minprac[(f1,f2)] - distance)
-      if distance > maxprac[(f1,f2)]:
-        cost += weights[20]*(distance - maxprac[(f1,f2)])
+      if distance < minprac[(f2,f1)]:
+        cost += weights[19]*(minprac[(f2,f1)] - distance)
+      if distance > maxprac[(f2,f1)]:
+        cost += weights[20]*(distance - maxprac[(f2,f1)])
 
 # Three notes backward
       if index2 in preds:
@@ -402,47 +407,44 @@ def singleCost(facts, queries,weights, distance_matrix, keys, index):
       distance = notes[index2] - notes[index]
       f1, f2 = fingers[index], fingers[index2]
 # Rule 1
-      if distance < mincomf[(f1,f2)]:
-        cost += weights[21]*(mincomf[(f1,f2)] - distance)
-      if distance > maxcomf[(f1,f2)]:
-        cost += weights[22]*(distance - maxcomf[(f1,f2)])
+      if distance < mincomf[(f2,f1)]:
+        cost += weights[21]*(mincomf[(f2,f1)] - distance)
+      if distance > maxcomf[(f2,f1)]:
+        cost += weights[22]*(distance - maxcomf[(f2,f1)])
 # Rule 2
-      if distance < minrel[(f1,f2)]:
-        cost += weights[23]*(minrel[(f1,f2)] - distance)
-      if distance > maxrel[(f1,f2)]:
-        cost += weights[24]*(distance - maxrel[(f1,f2)])
-      if distance < minprac[(f1,f2)]:
-        cost += weights[25]*(minprac[(f1,f2)] - distance)
-      if distance > maxprac[(f1,f2)]:
-        cost += weights[26]*(distance - maxprac[(f1,f2)])
+      if distance < minrel[(f2,f1)]:
+        cost += weights[23]*(minrel[(f2,f1)] - distance)
+      if distance > maxrel[(f2,f1)]:
+        cost += weights[24]*(distance - maxrel[(f2,f1)])
+      if distance < minprac[(f2,f1)]:
+        cost += weights[25]*(minprac[(f2,f1)] - distance)
+      if distance > maxprac[(f2,f1)]:
+        cost += weights[26]*(distance - maxprac[(f2,f1)])
 
   if index in rev_concurrents:
     for index2 in rev_concurrents[index]:
       distance = notes[index] - notes[index2]
       f2, f1 = fingers[index], fingers[index2]
 # Rule 1
-      if distance < mincomf[(f1,f2)]:
-        cost += weights[21]*(mincomf[(f1,f2)] - distance)
-      if distance > maxcomf[(f1,f2)]:
-        cost += weights[22]*(distance - maxcomf[(f1,f2)])
+      if distance < mincomf[(f2,f1)]:
+        cost += weights[21]*(mincomf[(f2,f1)] - distance)
+      if distance > maxcomf[(f2,f1)]:
+        cost += weights[22]*(distance - maxcomf[(f2,f1)])
 # Rule 2
-      if distance < minrel[(f1,f2)]:
-        cost += weights[23]*(minrel[(f1,f2)] - distance)
-      if distance > maxrel[(f1,f2)]:
-        cost += weights[24]*(distance - maxrel[(f1,f2)])
-      if distance < minprac[(f1,f2)]:
-        cost += weights[25]*(minprac[(f1,f2)] - distance)
-      if distance > maxprac[(f1,f2)]:
-        cost += weights[26]*(distance - maxprac[(f1,f2)])
-
-
-
+      if distance < minrel[(f2,f1)]:
+        cost += weights[23]*(minrel[(f2,f1)] - distance)
+      if distance > maxrel[(f2,f1)]:
+        cost += weights[24]*(distance - maxrel[(f2,f1)])
+      if distance < minprac[(f2,f1)]:
+        cost += weights[25]*(minprac[(f2,f1)] - distance)
+      if distance > maxprac[(f2,f1)]:
+        cost += weights[26]*(distance - maxprac[(f2,f1)])
   return cost   
 
 def hardConstraint(concurrents,rev_concurrents, fingers, index, finger):
   if index in concurrents:
     for index2 in concurrents[index]:
-      if finger == fingers[index2]:
+      if finger  == fingers[index2]:
         return False
   if index in rev_concurrents:
     for index2 in rev_concurrents[index]:
@@ -478,27 +480,37 @@ def infer(facts, queries, weights,distance_matrix, keys, epochs):
     if e % 10 == 0:
       new_cost = evaluateRules(facts,fingers,weights, distance_matrix, keys)
       if total_cost == new_cost:
-        print("No change in 10 iterations, ending")
         return fingers
       total_cost = evaluateRules(facts,fingers,weights, distance_matrix, keys)
-      print(total_cost)
   return fingers
 
+def left_fingers(db_file,output):
+  fact_preds, query_preds = readDB(db_file)
+  weights, rules = readRules(mln_file)
+  distance_matrix = readDistanceMatrix(dm_file)
+  keys = readKeys(key_file)
+  fingers = infer(fact_preds,query_preds,weights, distance_matrix, keys, 226)
+  
+  for key, value in sorted(fingers.items()):
+    output.write("Finger(%s, %s)\n" % (value,key))
+
+
 def main():
-  flags = parseArgs()
   fact_preds, query_preds = readDB(flags.db_file)
   weights, rules = readRules(flags.mln_file)
   distance_matrix = readDistanceMatrix(flags.dm_file)
   keys = readKeys(flags.key_file)
   cost = evaluateRules(fact_preds,query_preds,weights, distance_matrix, keys)
-  cost1= singleCost(fact_preds,query_preds,weights, distance_matrix, keys, 226)
-  fingers = infer(fact_preds,query_preds,weights, distance_matrix, keys, 226)
-  out = flags.out
-  print(out)
-  print('---------------------')
-  with open('../../../upload/daydreamingl.ann', 'w') as rwrite:
-    for key, value in sorted(fingers.items()):
-      rwrite.write("Finger(%s, %s)\n" % (value,key))
+  fingers = infer(fact_preds,query_preds,weights, distance_matrix, keys, flags.epochs)
+  lwrite = open('../Results/outputl.db', 'w')
+  for key, value in sorted(fingers.items()):
+    lwrite.write("Finger(%s, %s)\n" % (value,key))
+  cost1 = evaluateRules(fact_preds,query_preds,weights, distance_matrix, keys)
+
+  print("Initial cost: {}".format(cost))
+  print("Ending cost: {}".format(cost1))
+
+
 
 
 if __name__ == "__main__":

@@ -176,23 +176,22 @@ def setNoteIndex(notes):
         index += 1
   return notes
 
-def getTuffyPredictions(tuffy_output_file):
+def getTuffyPredictions(tuffy_output):
   tuffy_predictions = {} #dictionary for tuffy output
   fingerings = [] #list of fingerings and associative indices to be annotated
   fings = [] #list of fingerings from fingerings list
   indices = [] #list of indices from fingerings list
   result = zip() #indices zipped with fingers
   
-  with open(tuffy_output_file) as tuffy_output:
-    for line in tuffy_output:
-      fingerings.append(line)
+  for line in tuffy_output.readlines():
+    fingerings.append(line)
 
-    for finger in fingerings:
-      split1 = finger.split("(")
-      split2 = split1[1].split(")")
-      split3 = split2[0].split(",")
-      fings.append(int(split3[0]))
-      indices.append(int(split3[1]))
+  for finger in fingerings:
+    split1 = finger.split("(")
+    split2 = split1[1].split(")")
+    split3 = split2[0].split(",")
+    fings.append(int(split3[0]))
+    indices.append(int(split3[1]))
       
     result = zip(indices, fings)
     resultSet = set(result)
@@ -201,7 +200,7 @@ def getTuffyPredictions(tuffy_output_file):
   return tuffy_predictions
 
 
-def annotateFingerings(notes, song):#, tuffy_predictions): 
+def annotateFingerings(notes, song, tuffy_predictions): 
 
   # get all event onsets for both treble and bass clef 
   for measure,beats in sorted(notes.items()):
@@ -209,24 +208,33 @@ def annotateFingerings(notes, song):#, tuffy_predictions):
     for beat,ns in sorted(beats.items()):
       # print('\tBeat {}:'.format(beat))
       for n in ns:
-        # if(n.Index in tuffy_predictions):
-          # finger = tuffy_predictions[n.Index]
-        finger = 1
-        n.Note.articulations.append(articulations.Fingering(finger))
+        if(n.Index in tuffy_predictions):
+          finger = tuffy_predictions[n.Index]
+          n.Note.articulations.append(articulations.Fingering(finger))
 
-def main():
-  # convert song
-  song_file = sys.argv[1]
-  # tuffy_output_file = sys.argv[2]
-  out = sys.argv[2]
+def Convert(song_file, fingers):
   notes, song = convertSong(song_file)
   notes = setNoteIndex(notes)
-  # tuffy_predictions = getTuffyPredictions(tuffy_output_file) # (make dictionary (key: index, value: finger number)) (e.g. { 45: 1, ...})
+  predictions = getTuffyPredictions(fingers)
+  annotateFingerings(notes, song, predictions)
+  return song
+
+def main():
+  if len(sys.argv) != 3:
+    print('Usage:', sys.argv[0], '<song_file>', '<tuffy_output>')
+    exit(1)
+
+  # convert song
+  song_file = sys.argv[1]
+  tuffy_output_file = sys.argv[2]
+  notes, song = convertSong(song_file)
+  notes = setNoteIndex(notes)
+  tuffy_predictions = getTuffyPredictions(tuffy_output_file) # (make dictionary (key: index, value: finger number)) (e.g. { 45: 1, ...})
   #for index in sorted(tuffy_predictions.keys()):
    ##  print(index, tuffy_predictions[index])
-  annotateFingerings(notes, song)#, tuffy_predictions)
-  # hi = '/home/colton/repos/af-music/Django/fileUpload/src/myproject/media/annotations/'
-  song.write('musicxml', out)#song_file[:-4] + "_annotated.xml")
+  annotateFingerings(notes, song, tuffy_predictions)
+  
+  song.write('musicxml', song_file[:-4] + "_annotated.xml")
 
 if __name__ == "__main__":
   main()

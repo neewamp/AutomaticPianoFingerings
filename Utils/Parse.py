@@ -12,6 +12,8 @@
 
 import sys
 import math
+import io
+
 
 from music21 import converter, clef, note, articulations
 import music21.environment as environment
@@ -49,15 +51,19 @@ def convertMidiToAugMidi(midi_num):
 
 def getNoteProperties(x, prev_staff):
   t = ''
-  s = "Pitch: " + str(x.pitch.midi) + ", Measure: "  + str(x.measureNumber) + ", Beat: " +  str(round(x.beat, 10)) ;
+  s = "Pitch: " + str(x.pitch.midi) + ", Measure: "  + str(x.measureNumber) + ", Beat: " +  str(round(x.beat, 10)) + " Finger: " + str(x.lyric);
   s += ", "
   if x.tie != None:
     t = x.tie.type
   s += t
+  if x.articulations != []:
+    Finger = x.articulations[0].fingerNumber
+  else:
+    Finger = 1
+    # print('Finger missing for note {} in measure {} with duration {}.'.format(x.pitch, x.measureNumber, round(x.duration.quarterLength, 10)))
   Measure = x.measureNumber
   Beat = round(x.beat, 10)
   Duration = round(x.duration.quarterLength, 10)
-  Finger = -1
   # MIDIDIDIDIDIDI
   return NoteInfo(convertMidiToAugMidi(x.pitch.midi), Finger, Duration, prev_staff, Measure, Beat, x)
 
@@ -68,12 +74,23 @@ def getChordNoteProperties(n, x, pitch, prev_staff):
   if x.tie != None:
     t = x.tie.type
   s += t
+  if n.articulations != []:
+    # print('Chord:', x, 'Note:', pitch)
+    # print('Articulations:', n.articulations)
+    Finger = n.articulations[0].fingerNumber
+  else:
+    Finger = 1
+    # print('Finger missing for note {} in measure {} with duration {}.'.format(pitch, x.measureNumber, round(x.duration.quarterLength, 10)))
   Measure = x.measureNumber
   Beat = round(x.beat, 10)
-  Finger = -1
   Duration = round(x.duration.quarterLength, 10)
   # MIDIDIDIDIDI
-  return NoteInfo(convertMidiToAugMidi(pitch.midi), Finger, Duration, prev_staff, Measure, Beat, x)
+  try:
+    return NoteInfo(convertMidiToAugMidi(pitch.midi), Finger, Duration, prev_staff, Measure, Beat, x)
+  except:
+    Finger = 1
+    return NoteInfo(convertMidiToAugMidi(pitch.midi), Finger, Duration, prev_staff, Measure, Beat, x)
+  
 
 def getClef(prev_staff, clef):
   if clef.sign == 'G':
@@ -103,7 +120,13 @@ def convertSong(song_file):
         prev_staff = getClef(prev_staff, x.activeSite.clef)
       if x.isChord:
         # if all fingerings annotated on root note of chord...
-
+        if len(x._notes[0].articulations) > 1:
+          fingerings = []
+          for a in x._notes[0].articulations:
+            if(a.name == 'fingering'):
+              fingerings.append(int(a.fingerNumber))
+          for i in range(len(fingerings)):
+            x._notes[i].articulations.append(articulations.Fingering(fingerings[i]))
         notes_tmp = []
         for p, n in zip(x.pitches, x._notes):
           notes_tmp.append(getChordNoteProperties(n, x, p, prev_staff))
@@ -287,6 +310,7 @@ def printNotes(notes, song, out=sys.stdout):
       # print('\tBeat {}:'.format(beat))
       for n in ns:
         out.write('Note({}, {})\n'.format(n.Pitch, n.Index))
+        out.write('Finger({}, {})\n'.format(n.Finger, n.Index))
         out.write('Staff({}, {})\n'.format(n.Staff, n.Index))
 
   # print concurrent notes for treble and bass
@@ -325,24 +349,17 @@ def printNotes(notes, song, out=sys.stdout):
           if calcOffset(c_note, song) == calcOnset(n_note, song):
             out.write('Succ({}, {})\n'.format(c_note.Note.Index, n_note.Note.Index))
 
-def main():
-  if len(sys.argv) < 2:
-    print('Usage:', sys.argv[0], '<song_file>')
-    exit(1)
-
-  # convert song
-  song_file = sys.argv[1]
-  output_file = open(sys.argv[2], 'w')
+def notesString(song_file,output):
   notes, song = convertSong(song_file)
   notes = setNoteIndex(notes)
-  # notes = [ns for measure,beats in sorted(notes.items()) for beat,ns in sorted(beats.items())]
-  # for i,ns in enumerate(notes):
-  #   if i == len(notes)-1:
-  #     printNotes(ns)
-  #   else:
-  #     printNotes(ns,notes[i+1])
-  printNotes(notes, song, output_file)
+  printNotes(notes, song, output)
+
+def main():
+  output = io.StringIO()
+  notesString(sys.argv[1],output)
+  contents = output.getvalue()
+  output.close()
+  print(contents)
 
 if __name__ == "__main__":
   main()
-
