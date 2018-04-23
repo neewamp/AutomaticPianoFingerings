@@ -77,12 +77,14 @@ def upload(request):
     # Handle file upload
     if request.method == 'POST':
         xmlfile = request.FILES['xmlfile']
+        if not ".xml" in str(xmlfile):
+            return HttpResponse("Please Enter a valid html files")
         # response = HttpResponse(xmlfile.read(), content_type="application/xhtml+xml")
         # response['Content-Disposition'] = 'attachment;filename=' + request.FILES['xmlfile'].name
         # annotate('upload/' + str(xmlfile)[:-4]+'.txt', str(xmlfile)[:-4])
         handle_uploaded_file(xmlfile,str(xmlfile))
         name = str(xmlfile)[:-4]
-        # topdf(name)
+        topdf(name)
         return render(request, 'index.html', {'Out' : True,'Files' : [str(xmlfile)[:-4] + '_annotated.xml', name + '_annotated.pdf']})
 
     return render(request, 'index.html', {'Out' : False})

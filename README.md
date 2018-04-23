@@ -1,6 +1,6 @@
 # Python: Getting Started
 
-# Check it out at [af-music](https://af-music.herokuapp.com/)
+# Check it out at [af-music](https://california.cs.ohio.edu)
 
 Make sure you have Python [installed properly](http://install.python-guide.org).  Also, install the [Heroku Toolbelt](https://toolbelt.heroku.com/) and [Postgres](https://devcenter.heroku.com/articles/heroku-postgresql#local-setup).
 
@@ -9,9 +9,6 @@ cd python-getting-started
 
 $ pipenv install
 
-$ createdb python_getting_started
-
-$ python manage.py migrate
 $ python manage.py collectstatic
 
 $ heroku local
