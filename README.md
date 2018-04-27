@@ -34,3 +34,5 @@ or
 For more information about using Python on Heroku, see these Dev Center articles:
 
 - [Python on Heroku](https://devcenter.heroku.com/categories/python)
+## Start me
+nohup sudo gunicorn gettingstarted.wsgi --bind 0.0.0.0:80 -w 4 --timeout 90 &

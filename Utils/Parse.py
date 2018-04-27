@@ -14,7 +14,6 @@ import sys
 import math
 import io
 
-
 from music21 import converter, clef, note, articulations
 import music21.environment as environment
 class NoteInfo:
@@ -50,47 +49,58 @@ def convertMidiToAugMidi(midi_num):
   return aug_midi_num
 
 def getNoteProperties(x, prev_staff):
-  t = ''
-  s = "Pitch: " + str(x.pitch.midi) + ", Measure: "  + str(x.measureNumber) + ", Beat: " +  str(round(x.beat, 10)) + " Finger: " + str(x.lyric);
-  s += ", "
+  tie_type = ''
   if x.tie != None:
-    t = x.tie.type
-  s += t
+    tie_type = x.tie.type
   if x.articulations != []:
-    Finger = x.articulations[0].fingerNumber
+    # iterate over x's articulation list; find first instance of a finger number
+    # and assign this as x's finger number.
+    # NOTE: not sure what to do if a single note/chord contains multiple finger 
+    # annotations
+    # print('Chord:', x, 'Note:', pitch)
+    # print('Articulations:', n.articulations)
+    for a in x.articulations:
+      if type(a) is articulations.Fingering:
+        Finger = a.fingerNumber
+        break
+    #print('Articulations for note below: {}'.format(x.articulations))
   else:
     Finger = 1
-    # print('Finger missing for note {} in measure {} with duration {}.'.format(x.pitch, x.measureNumber, round(x.duration.quarterLength, 10)))
   Measure = x.measureNumber
   Beat = round(x.beat, 10)
   Duration = round(x.duration.quarterLength, 10)
   # MIDIDIDIDIDIDI
+  s = "Pitch: " + str(x.pitch) + ", Measure: "  + str(Measure) + ", Beat: " + str(Beat) + ", Finger: " + str(Finger) + ", Tie: " + tie_type
+  #print(s)
   return NoteInfo(convertMidiToAugMidi(x.pitch.midi), Finger, Duration, prev_staff, Measure, Beat, x)
 
 def getChordNoteProperties(n, x, pitch, prev_staff):
-  t = ''
-  s = "Pitch: " + str(pitch.midi) + ", Measure: "  + str(x.measureNumber) + ", Beat: " +  str(round(x.beat, 10)) + " Finger: " + str("");
-  s += ", "
+  tie_type = ''
   if x.tie != None:
-    t = x.tie.type
-  s += t
+    tie_type = x.tie.type
+
+  Finger = -1
   if n.articulations != []:
+    # iterate over x's articulation list; find first instance of a finger number
+    # and assign this as x's finger number.
+    # NOTE: not sure what to do if a single note/chord contains multiple finger 
+    # annotations
     # print('Chord:', x, 'Note:', pitch)
     # print('Articulations:', n.articulations)
-    Finger = n.articulations[0].fingerNumber
+    for a in n.articulations:
+      if type(a) is articulations.Fingering:
+        Finger = a.fingerNumber
+        break
+    #print('Articulations for note below: {}'.format(x.articulations))
   else:
     Finger = 1
-    # print('Finger missing for note {} in measure {} with duration {}.'.format(pitch, x.measureNumber, round(x.duration.quarterLength, 10)))
   Measure = x.measureNumber
   Beat = round(x.beat, 10)
   Duration = round(x.duration.quarterLength, 10)
   # MIDIDIDIDIDI
-  try:
-    return NoteInfo(convertMidiToAugMidi(pitch.midi), Finger, Duration, prev_staff, Measure, Beat, x)
-  except:
-    Finger = 1
-    return NoteInfo(convertMidiToAugMidi(pitch.midi), Finger, Duration, prev_staff, Measure, Beat, x)
-  
+  s = "Pitch: " + str(pitch) + ", Measure: "  + str(Measure) + ", Beat: " + str(Beat) + ", Finger: " + str(Finger) + ", Tie: " + tie_type
+  #print(s)
+  return NoteInfo(convertMidiToAugMidi(pitch.midi), Finger, Duration, prev_staff, Measure, Beat, x)
 
 def getClef(prev_staff, clef):
   if clef.sign == 'G':
@@ -105,7 +115,7 @@ def convertSong(song_file):
   all_notes = song.recurse(classFilter=('Note','Chord'))   # list of all notes in song
   notes = {}                              # list of all notes in song, processed
   # cur_notes = []                        # notes that could overlap with current event
-  # events = {}                           # dictionary of events ('every unique note onset and offset)
+  # events = {}                           # dictionary of events (every unique note onset and offset)
                                           # key is onset; value is list of overlapping notes
 
   prev_staff = getClef(0, song.parts[0][1].clef) # what if right hand part starts out as bass clef?
@@ -310,8 +320,15 @@ def printNotes(notes, song, out=sys.stdout):
       # print('\tBeat {}:'.format(beat))
       for n in ns:
         out.write('Note({}, {})\n'.format(n.Pitch, n.Index))
+        #out.write('Note({}, {}, {})\n'.format(n.Pitch, n.Note.pitches, n.Index))
         out.write('Finger({}, {})\n'.format(n.Finger, n.Index))
-        out.write('Staff({}, {})\n'.format(n.Staff, n.Index))
+        if n.Staff == -1:
+          out.write('Staff({}, {})\n'.format(n.Staff, n.Index))
+        elif n.Staff == 1:
+          out.write('Staff({}, {})\n'.format(n.Staff, n.Index))
+        else:
+          out.write('Staff({}, {}, {})\n'.format('unknown', n.Staff, n.Index))
+
 
   # print concurrent notes for treble and bass
   for t_onset, t_notes in sorted(treble_events.items()):
@@ -319,12 +336,14 @@ def printNotes(notes, song, out=sys.stdout):
       for t_note2 in t_notes:
         if t_note1 != t_note2 and not (t_note1.fromPrevious and t_note2.fromPrevious) and (t_note1.Note.Index < t_note2.Note.Index):
           out.write('Concurrent({}, {})\n'.format(t_note1.Note.Index, t_note2.Note.Index))
+          #out.write('Concurrent({}, {}, {}, {})\n'.format(t_note1.Note.Index, t_note1.Note.Note.pitches, t_note2.Note.Index, t_note2.Note.Note.pitches))
 
   for b_onset, b_notes in sorted(bass_events.items()):
     for b_note1 in b_notes:
       for b_note2 in b_notes:
         if b_note1 != b_note2 and not (b_note1.fromPrevious and b_note2.fromPrevious) and (b_note1.Note.Index < b_note2.Note.Index):
           out.write('Concurrent({}, {})\n'.format(b_note1.Note.Index, b_note2.Note.Index))
+          #out.write('Concurrent({}, {}, {}, {})\n'.format(b_note1.Note.Index, b_note1.Note.Note.pitches, b_note2.Note.Index, b_note2.Note.Note.pitches))
 
   # print successors for treble and bass
   treble_event_onsets = sorted(treble_events.keys())
@@ -337,6 +356,7 @@ def printNotes(notes, song, out=sys.stdout):
         for n_note in next_event_notes:
           if calcOffset(c_note, song) == calcOnset(n_note, song):
             out.write('Succ({}, {})\n'.format(c_note.Note.Index, n_note.Note.Index))
+            #out.write('Succ({}, {}, {}, {})\n'.format(c_note.Note.Index, c_note.Note.Note.pitches, n_note.Note.Index, n_note.Note.Note.pitches))
 
   bass_event_onsets = sorted(bass_events.keys())
   for i in range(len(bass_event_onsets)):
@@ -348,6 +368,7 @@ def printNotes(notes, song, out=sys.stdout):
         for n_note in next_event_notes:
           if calcOffset(c_note, song) == calcOnset(n_note, song):
             out.write('Succ({}, {})\n'.format(c_note.Note.Index, n_note.Note.Index))
+            #out.write('Succ({}, {}, {}, {})\n'.format(c_note.Note.Index, c_note.Note.Note.pitches, n_note.Note.Index, n_note.Note.Note.pitches))
 
 def notesString(song_file,output):
   notes, song = convertSong(song_file)
@@ -356,6 +377,7 @@ def notesString(song_file,output):
 
 def main():
   output = io.StringIO()
+  print('starting parsing')
   notesString(sys.argv[1],output)
   contents = output.getvalue()
   output.close()
@@ -363,3 +385,4 @@ def main():
 
 if __name__ == "__main__":
   main()
+

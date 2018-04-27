@@ -3,12 +3,12 @@
 
 {% block content %}
 <head>
-<style>
-            #manual {margin: 5% auto; background: #f2f2f2; color: #444444; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; font-size: 16px; line-height: 1.8; text-shadow: 0 1px 0 #ffffff; max-width: 90%;}
-            code {background: white;}
-            a {border-bottom: 1px solid #444444; color: #444444; text-decoration: none;}
-            a:hover {border-bottom: 0;}
-        </style>
+<!-- <style> -->
+<!--             #manual {margin: 5% auto; background: #f2f2f2; color: #444444; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; font-size: 16px; line-height: 1.8; text-shadow: 0 1px 0 #ffffff; max-width: 90%;} -->
+<!--             code {background: white;} -->
+<!--             a {border-bottom: 1px solid #444444; color: #444444; text-decoration: none;} -->
+<!--             a:hover {border-bottom: 0;} -->
+<!--         </style> -->
 </head>
 <body id="manual">
 <p dir="ltr">
@@ -100,8 +100,37 @@
     polyphonic sheet music” by Matteo Balliauw.
 </p>
 <br/>
+<br/>
 <p dir="ltr">
-    3. Usage
+    3. Reporting
+</p>
+<p dir="ltr">
+    If the user has questions, comments, or complaints about our website or
+this user manual, they should feel free to email us at    <a href="mailto:afmusic@gmail.com">afmusic@gmail.com</a>. These questions
+    can go beyond the usage of our website––we are also happy to answer
+    questions about our machine learning-based implementation.
+</p>
+<br/>
+<p dir="ltr">
+    4. About Us
+</p>
+<p dir="ltr">
+    We are senior Computer Science majors at Ohio University. We all share an
+    interest in machine learning, and music, resulting in AF Music. We are all
+    passionate about our project and would be open to any inquiry.
+</p>
+<br/>
+<p dir="ltr">
+    5. Acknowledgements
+</p>
+<p dir="ltr">
+    6. Department, Dr. Bunescu, Ohio University, Ami Scherson
+</p>
+<br/>
+
+
+<p dir="ltr">
+    7. Usage
 </p>
 <p dir="ltr">
     Typical User and Use Cases
@@ -117,14 +146,14 @@
     The following are several use cases based on different user experience
     levels:
 </p>
-<ol>
+<ul>
     <li dir="ltr">
         <p dir="ltr">
             (Beginner) Use sample MusicXML files provided on website and
             download a PDF with fingerings.
         </p>
     </li>
-    <ol>
+    <ul>
         <li dir="ltr">
             <p dir="ltr">
                 The user clicks the title of one of the sample MusicXML files
@@ -132,7 +161,7 @@
                 ‘Upload.’
             </p>
         </li>
-        <ol>
+        <ul>
             <li dir="ltr">
                 <p dir="ltr">
                     If the user uploads an invalid MusicXML file or a file with
@@ -140,7 +169,7 @@
                     message and will not convert the given file.
                 </p>
             </li>
-        </ol>
+        </ul>
         <li dir="ltr">
             <p dir="ltr">
                 When the server has finished computing the fingerings for the
@@ -155,13 +184,13 @@
                 Adobe Acrobat or Preview.
             </p>
         </li>
-    </ol>
+    </ul>
     <li dir="ltr">
         <p dir="ltr">
             (Medium) Upload external MusicXML file and download visualization.
         </p>
     </li>
-    <ol>
+    <ul>
         <li dir="ltr">
             <p dir="ltr">
                 The user clicks the ‘Browse’ button on the front page of the
@@ -170,13 +199,6 @@
                 the front page of the website.
             </p>
         </li>
-        <ol>
-            <li dir="ltr">
-                <p dir="ltr">
-                    (See 2ai. above).
-                </p>
-            </li>
-        </ol>
         <li dir="ltr">
             <p dir="ltr">
                 When the server has finished computing the fingerings for the
@@ -198,19 +220,6 @@
             with fingerings.
         </p>
     </li>
-    <ol>
-        <li dir="ltr">
-            <p dir="ltr">
-                (See step 2a. above).
-            </p>
-        </li>
-        <ol>
-            <li dir="ltr">
-                <p dir="ltr">
-                    (See 2ai. above).
-                </p>
-            </li>
-        </ol>
         <li dir="ltr">
             <p dir="ltr">
                 When the server has finished computing the fingerings for the
@@ -237,32 +246,5 @@ downloaded from                <a href="https://musescore.org/">https://musescor
         </li>
     </ol>
 </ol>
-<br/>
-<p dir="ltr">
-    4. Reporting
-</p>
-<p dir="ltr">
-    If the user has questions, comments, or complaints about our website or
-this user manual, they should feel free to email us at    <a href="mailto:afmusic@gmail.com">afmusic@gmail.com</a>. These questions
-    can go beyond the usage of our website––we are also happy to answer
-    questions about our machine learning-based implementation.
-</p>
-<br/>
-<p dir="ltr">
-    5. About Us
-</p>
-<p dir="ltr">
-    We are senior Computer Science majors at Ohio University. We all share an
-    interest in machine learning, and music, resulting in AF Music. We are all
-    passionate about our project and would be open to any inquiry.
-</p>
-<br/>
-<p dir="ltr">
-    5. Acknowledgements
-</p>
-<p dir="ltr">
-    Department, Dr. Bunescu, Ohio University, Ami Scherson
-</p>
-<br/>
 </body>
 {% endblock %}

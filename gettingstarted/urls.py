@@ -13,6 +13,8 @@ import hello.views
 # url(r'^blog/', include('blog.urls')),
 
 urlpatterns = [
+    url(r'^manual', hello.views.manual, name='manual'),
+    url(r'^history', hello.views.history, name='history'),
     url(r'^$', hello.views.index, name='index'),
     url(r'^db', hello.views.db, name='db'),
     url(r'^admin/', admin.site.urls),
@@ -20,7 +22,6 @@ urlpatterns = [
     url(r'^weekone/', hello.views.weekone, name='weekone'),
     url(r'^presentation/', hello.views.pres, name='pres'),
     url(r'^upload/', hello.views.upload, name='upload'),
-    url(r'^manual/', hello.views.manual, name='manual'),
     url(r'^test/', hello.views.test, name='test'),
 ] + static('annotated/', document_root='annotated/')
 
